@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uk"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <h:head>
+        <title>Управління напоями</title>
+    </h:head>
+    <h:body>
+        <!-- ФОРМА 1: Таблиця -->
+        <h:form id="drinks-form">
+            <h2>Список напоїв</h2>
+            <p:dataTable value="#{drinkService.drinks}" var="drink" emptyMessage="Немає записів">
+                <p:column headerText="ID"><h:outputText value="#{drink.id}"/></p:column>
+                <p:column headerText="Назва"><h:outputText value="#{drink.name}"/></p:column>
+                <p:column headerText="Об'єм"><h:outputText value="#{drink.volume}"/></p:column>
+                <p:column headerText="Калорії"><h:outputText value="#{drink.calories}"/></p:column>
+                <p:column headerText="Придатний до"><h:outputText value="#{drink.expirationDate}"/></p:column>
+
+                <p:column headerText="Дії">
+                    <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
+                                     action="#{drinkService.deleteDrink(drink)}" update="@form"/>
+                    <p:commandButton value="Змінити" action="#{drinkService.editDrink(drink)}"
+                                     oncomplete="PF('edit-drink').show()" update="edit-form" style="margin-left:5px;"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <hr style="margin: 30px 0;"/>
+
+        <!-- ФОРМА 2: Створення нового напою -->
+        <h:form id="create-form">
+            <h2>Додати новий напій</h2>
+            <h:panelGrid columns="2" cellpadding="4">
+                <h:outputLabel value="Назва:" for="name"/>
+                <h:inputText id="name" value="#{drinkService.currentDrink.name}" required="true"/>
+
+                <h:outputLabel value="Об'єм (л):" for="volume"/>
+                <h:inputText id="volume" value="#{drinkService.currentDrink.volume}" required="true"/>
+
+                <h:outputLabel value="Калорії:" for="calories"/>
+                <h:inputText id="calories" value="#{drinkService.currentDrink.calories}" required="true"/>
+
+                <h:outputLabel value="Придатний до (РРРР-ММ-ДД):" for="expDate"/>
+                <h:inputText id="expDate" value="#{drinkService.currentDrink.expirationDate}" required="true">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+            </h:panelGrid>
+            <p:commandButton action="#{drinkService.saveDrink}" value="Додати"
+                             styleClass="ui-button-success" update="@form, drinks-form"/>
+        </h:form>
+
+        <!-- ФОРМА 3: Модальне вікно редагування -->
+        <p:dialog id="edit-dialog" header="Редагувати напій" widgetVar="edit-drink" modal="true">
+            <h:form id="edit-form">
+                <h:panelGrid columns="2" cellpadding="4">
+                    <h:outputLabel value="Назва:" for="edit-name"/>
+                    <h:inputText id="edit-name" value="#{drinkService.currentDrink.name}"/>
+
+                    <h:outputLabel value="Об'єм (л):" for="edit-volume"/>
+                    <h:inputText id="edit-volume" value="#{drinkService.currentDrink.volume}"/>
+
+                    <h:outputLabel value="Калорії:" for="edit-calories"/>
+                    <h:inputText id="edit-calories" value="#{drinkService.currentDrink.calories}"/>
+
+                    <h:outputLabel value="Придатний до:" for="edit-expDate"/>
+                    <h:inputText id="edit-expDate" value="#{drinkService.currentDrink.expirationDate}">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                </h:panelGrid>
+                <p:commandButton value="Оновити" action="#{drinkService.saveDrink}"
+                                 styleClass="ui-button-primary" update="edit-form, drinks-form"
+                                 oncomplete="PF('edit-drink').hide()"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</f:view>
+</html>
