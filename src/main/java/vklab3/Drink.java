@@ -1,4 +1,4 @@
-package org.VKLAB3;
+package vklab3;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
