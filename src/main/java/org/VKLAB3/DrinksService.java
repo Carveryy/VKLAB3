@@ -1,4 +1,4 @@
-package vklab3;
+package org.VKLAB3;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
